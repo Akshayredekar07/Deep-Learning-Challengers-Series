@@ -1,0 +1,4 @@
+
+Regularizers
+    
+    > 1. kernal regularizer - 
