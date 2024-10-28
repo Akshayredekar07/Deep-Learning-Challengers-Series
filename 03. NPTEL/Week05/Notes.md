@@ -1,6 +1,8 @@
 ### Resources
 
 [Eigenvalue and Eigenvector - Chatgpt](https://chatgpt.com/share/671f100e-612c-8011-b17d-52a677159ff4)<br>
+[PCA - Chatgpt - coding funda](https://chatgpt.com/c/671f292b-e47c-800f-b08e-60b0b1238bba)<br>
+[PCA - Chatgpt - coding funda](https://chatgpt.com/c/671f3356-d008-800f-9cf0-07b624d266fc)<br>
 ---
 
 [Eigenvalue and Eigenvector - Wikipedia](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors)<br>
