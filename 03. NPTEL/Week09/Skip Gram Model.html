@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Skip Gram Model.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h3 id="overview-of-the-skip-gram-model">Overview of the Skip-gram Model</h3>
+<ul>
+<li><strong>Objective</strong>: The Skip-gram model predicts context words given a target (input) word. This is the opposite of the Continuous Bag of Words (CBOW) model, which predicts a target word from its context.</li>
+</ul>
+<h3 id="key-components">Key Components</h3>
+<ol>
+<li>
+<p><strong>Input Word</strong>:</p>
+<ul>
+<li>Represents a single word for which we want to predict surrounding (context) words.</li>
+<li>For example, given the input word &quot;sat,&quot; we want to find related words in the context, such as &quot;he,&quot; &quot;chair,&quot; etc.</li>
+</ul>
+</li>
+<li>
+<p><strong>Context Words</strong>:</p>
+<ul>
+<li>These are the words surrounding the input word. In a typical implementation, context words can be found on both sides of the input word.</li>
+<li>For example, in the sentence &quot;he sat on the chair,&quot; if &quot;sat&quot; is the input word, context words could be &quot;he,&quot; &quot;on,&quot; and &quot;the.&quot;</li>
+</ul>
+</li>
+<li>
+<p><strong>Word Vectors</strong>:</p>
+<ul>
+<li>Each word is represented as a vector in a high-dimensional space, using a weight matrix $W_{\text{word}}$ for input words and another matrix $W_{\text{context}}$ for context words.</li>
+<li>The dimension of these vectors is typically denoted as $k$.</li>
+</ul>
+</li>
+<li>
+<p><strong>Hidden Layer</strong>:</p>
+<ul>
+<li>The hidden layer representation is calculated as $h = W_{\text{word}} \cdot x$, where $x$ is the input word vector.</li>
+</ul>
+</li>
+</ol>
+<h3 id="loss-function">Loss Function</h3>
+<ul>
+<li>The loss function for the Skip-gram model involves calculating the probability of context words given the input word.</li>
+<li>The formula is often represented as:
+$$
+L(\theta) = -\sum_{i=1}^{d} \log(y_{w_i})
+$$
+where $y_{w_i}$ is the predicted probability of context word $w_i$, and $d$ is the number of context words.</li>
+</ul>
+<h3 id="predictions">Predictions</h3>
+<ul>
+<li>For a single input word, the model will produce multiple context words.</li>
+<li>The output layer typically uses the softmax function to convert raw scores (logits) into probabilities.</li>
+</ul>
+<h3 id="challenges">Challenges</h3>
+<ul>
+<li><strong>Computational Expense</strong>: The softmax function can be computationally expensive, especially with a large vocabulary size.</li>
+<li><strong>Solutions</strong>:
+<ol>
+<li><strong>Negative Sampling</strong>: Instead of updating all context words, randomly sample a few negative words to update the model, thus reducing computation.</li>
+<li><strong>Contrastive Estimation</strong>: This method helps improve the efficiency of the training process by contrasting positive examples (actual context words) against negative ones.</li>
+<li><strong>Hierarchical Softmax</strong>: This method uses a tree structure to reduce the computational complexity of calculating softmax, allowing for faster training times.</li>
+</ol>
+</li>
+</ul>
+<h3 id="summary">Summary</h3>
+<ul>
+<li>The Skip-gram model focuses on predicting context words from a given input word, making it a powerful tool for learning word embeddings in NLP. It leverages a hidden layer to represent the input word and uses a loss function based on cross-entropy to train the model efficiently, despite challenges related to computational cost, which can be addressed through various techniques.</li>
+</ul>
+<h3 id="overview-of-word-context-pairs">Overview of Word-Context Pairs</h3>
+<p>In natural language processing (NLP), word-context pairs are used to train models like the Skip-gram model. The idea is to learn the relationships between words and their surrounding contexts.</p>
+<h3 id="definitions">Definitions</h3>
+<ol>
+<li>
+<p><strong>Correct Word-Context Pairs ($D_{wc}$)</strong>:</p>
+<ul>
+<li>These are pairs of words where the context word has appeared with the target word in the training corpus.</li>
+<li>Example: If we have the sentence &quot;He sat on the chair,&quot; the correct pairs can be derived as:
+<ul>
+<li>$(sat, on)$</li>
+<li>$(sat, a)$</li>
+<li>$(sat, chair)$</li>
+<li>$(on, a)$</li>
+<li>$(on, chair)$</li>
+<li>$(a, chair)$</li>
+<li>$(on, sat)$</li>
+<li>$(chair, sat)$</li>
+<li>$(chair, on)$</li>
+<li>$(chair, a)$</li>
+</ul>
+</li>
+</ul>
+<p>Thus, the set of correct pairs can be denoted as:
+$$
+D_{wc} = {(sat, on), (sat, a), (sat, chair), (on, a), (on, chair), (a, chair), (on, sat), (chair, sat), (chair, on), (chair, a)}
+$$</p>
+</li>
+<li>
+<p><strong>Incorrect Word-Context Pairs ($D_{wr}$)</strong>:</p>
+<ul>
+<li>These are pairs of words where the context word has <em>not</em> appeared with the target word in the corpus.</li>
+<li>To create these pairs, we randomly sample words that have never co-occurred with the target word. For example:
+<ul>
+<li>$(sat, oxygen)$</li>
+<li>$(sat, magic)$</li>
+<li>$(chair, sad)$</li>
+<li>$(chair, walking)$</li>
+</ul>
+</li>
+</ul>
+<p>The incorrect pairs can be denoted as:
+$$
+D_{wr} = {(sat, oxygen), (sat, magic), (chair, sad), (chair, walking)}
+$$</p>
+</li>
+</ol>
+<h3 id="construction-of-sets">Construction of Sets</h3>
+<ul>
+<li>
+<p><strong>Set of Correct Pairs ($D_{wc}$)</strong>: This is constructed from the training corpus by identifying all instances where words co-occur within a specified context window.</p>
+</li>
+<li>
+<p><strong>Set of Incorrect Pairs ($D_{wr}$)</strong>: This is constructed by randomly selecting a context word that has never been observed with the target word $w$. This sampling helps create negative examples for training, which are essential for models like Skip-gram to learn useful representations.</p>
+</li>
+</ul>
+<h3 id="representation-vectors">Representation Vectors</h3>
+<ul>
+<li>
+<p><strong>Word Representation ($v_w$)</strong>: Each word $w$ is represented as a vector in a continuous vector space. This representation is learned during the training process.</p>
+</li>
+<li>
+<p><strong>Context Word Representation ($u_c$)</strong>: Similarly, each context word $c$ is also represented as a vector in the same vector space.</p>
+</li>
+</ul>
+<h3 id="summary-of-the-process">Summary of the Process</h3>
+<ol>
+<li>Collect all correct pairs $D_{wc}$ from the corpus based on actual co-occurrences.</li>
+<li>Randomly sample incorrect pairs $D_{wr}$ by choosing words that have never co-occurred with the target word.</li>
+<li>Use both sets of pairs to train the Skip-gram model:
+<ul>
+<li>The model aims to maximize the probability of correct pairs while minimizing the probability of incorrect pairs.</li>
+</ul>
+</li>
+</ol>
+<p>By training on both correct and incorrect pairs, the Skip-gram model can effectively learn meaningful word embeddings that capture semantic relationships in the language.</p>
+<hr>
+<h3 id="objective">Objective</h3>
+<p>The goal is to <strong>maximize the probability</strong> of correct word-context pairs while minimizing the probability of incorrect pairs. This is accomplished through the use of probabilistic models and the sigmoid function.</p>
+<h3 id="probability-modeling">Probability Modeling</h3>
+<ol>
+<li>
+<p><strong>Probability of Correct Pair</strong>:</p>
+<ul>
+<li>For a given word-context pair $(w, c)$ from the set of correct pairs $D_{wc}$:
+$$
+P(z = 1 | w, c) = \sigma(u_c^T v_w)
+$$</li>
+<li>Here, $u_c$ is the context word representation, $v_w$ is the target word representation, and $\sigma$ is the sigmoid function defined as:
+$$
+\sigma(x) = \frac{1}{1 + e^{-x}}
+$$</li>
+</ul>
+</li>
+<li>
+<p><strong>Probability of Incorrect Pair</strong>:</p>
+<ul>
+<li>For a pair $(w, r)$ from the set of incorrect pairs $D_{wr}$:
+$$
+P(z = 0 | w, r) = \sigma(-u_r^T v_w)
+$$</li>
+<li>This indicates we want to model the probability that a randomly sampled context word $r$ is not a valid context for the target word $w$.</li>
+</ul>
+</li>
+</ol>
+<h3 id="combining-probabilities">Combining Probabilities</h3>
+<p>To derive a comprehensive objective function for training the model, we combine the probabilities from the correct and incorrect pairs:</p>
+<ol>
+<li>
+<p><strong>Maximizing the Product of Probabilities</strong>:</p>
+<ul>
+<li>The overall objective can be expressed as:
+$$
+\text{maximize} \prod_{(w,c) \in D_{wc}} P(z = 1 | w, c) \prod_{(w,r) \in D_{wr}} P(z = 0 | w, r)
+$$</li>
+</ul>
+</li>
+<li>
+<p><strong>Logarithmic Transformation</strong>:</p>
+<ul>
+<li>To facilitate optimization, we take the logarithm of the product:
+$$
+= \text{maximize} \sum_{(w,c) \in D_{wc}} \log P(z = 1 | w, c) + \sum_{(w,r) \in D_{wr}} \log P(z = 0 | w, r)
+$$</li>
+<li>This turns the product into a sum, which is easier to work with mathematically.</li>
+</ul>
+</li>
+</ol>
+<h3 id="final-objective-function">Final Objective Function</h3>
+<p>Substituting the probability models into the objective function gives:</p>
+<ol>
+<li>
+<p><strong>Substituting Probabilities</strong>:
+$$
+= \text{maximize} \sum_{(w,c) \in D_{wc}} \log \sigma(u_c^T v_w) + \sum_{(w,r) \in D_{wr}} \log \sigma(-u_r^T v_w)
+$$</p>
+</li>
+<li>
+<p><strong>Using the Sigmoid Function</strong>:
+$$
+= \text{maximize} \sum_{(w,c) \in D_{wc}} \log \left(\frac{1}{1 + e^{-u_c^T v_w}}\right) + \sum_{(w,r) \in D_{wr}} \log \left(\frac{1}{1 + e^{u_r^T v_w}}\right)
+$$</p>
+</li>
+</ol>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ul>
+<li><strong>Objective</strong>: The final objective function aims to maximize the likelihood of the correct word-context pairs while minimizing the likelihood of incorrect pairs.</li>
+<li><strong>Dot Product</strong>: The dot product $u_c^T v_w$ and $-u_r^T v_w$ serves to quantify the similarity between the context and word embeddings, which is crucial for learning effective word representations.</li>
+<li><strong>Use of the Sigmoid Function</strong>: The sigmoid function is key to mapping the outputs to probabilities, ensuring that the model outputs are in the range [0, 1].</li>
+</ul>
+<h3 id="conclusion">Conclusion</h3>
+<p>This mathematical framework helps to train the Skip-gram model efficiently, leveraging both positive (correct) and negative (incorrect) examples to learn meaningful embeddings for words. By maximizing the specified objective function, the model learns to distinguish valid contexts for words from those that do not co-occur, leading to better performance in various NLP tasks.</p>
+<h3 id="notation-breakdown">Notation Breakdown</h3>
+<ol>
+<li>
+<p><strong>$P(z = 1 | w, c)$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: The probability that the word-context pair $(w, c)$ is correct (i.e., $z = 1$).</li>
+<li><strong>Interpretation</strong>: This tells us how likely it is that the context word $c$ actually appears with the word $w$.</li>
+</ul>
+</li>
+<li>
+<p><strong>$P(z = 0 | w, r)$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: The probability that the word-context pair $(w, r)$ is incorrect (i.e., $z = 0$).</li>
+<li><strong>Interpretation</strong>: This indicates how likely it is that the context word $r$ does not appear with the word $w$.</li>
+</ul>
+</li>
+<li>
+<p><strong>$D_{wc}$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: The set of all correct word-context pairs.</li>
+<li><strong>Interpretation</strong>: This is a collection of pairs where the context words are valid for their corresponding target words.</li>
+</ul>
+</li>
+<li>
+<p><strong>$D_{wr}$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: The set of all incorrect word-context pairs.</li>
+<li><strong>Interpretation</strong>: This includes pairs where the context words are not valid for their corresponding target words.</li>
+</ul>
+</li>
+<li>
+<p><strong>$u_c$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: The vector representation (embedding) of the context word $c$.</li>
+<li><strong>Interpretation</strong>: This is a numerical representation that captures the semantic meaning of the context word.</li>
+</ul>
+</li>
+<li>
+<p><strong>$v_w$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: The vector representation (embedding) of the target word (w).</li>
+<li><strong>Interpretation</strong>: Similar to (u_c), this represents the target word's meaning in numerical form.</li>
+</ul>
+</li>
+<li>
+<p><strong>$\sigma(x)$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: The sigmoid function, defined as $\sigma(x) = \frac{1}{1 + e^{-x}}$.</li>
+<li><strong>Interpretation</strong>: This function maps any real number to a value between 0 and 1, effectively converting scores (like dot products) into probabilities.</li>
+</ul>
+</li>
+<li>
+<p><strong>$u_c^T v_w$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: The dot product of the context word vector $u_c$ and the target word vector $v_w$.</li>
+<li><strong>Interpretation</strong>: This measures the similarity between the context word and the target word. A higher value indicates greater similarity.</li>
+</ul>
+</li>
+<li>
+<p><strong>$-u_r^T v_w$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: The negative dot product of the incorrect context word vector $u_r$ and the target word vector $v_w$.</li>
+<li><strong>Interpretation</strong>: This reflects how dissimilar the incorrect context word $r$ is from the target word $w$. A lower (more negative) value indicates less likelihood of being a valid context.</li>
+</ul>
+</li>
+<li>
+<p><strong>$\prod$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: Represents the product of multiple terms.</li>
+<li><strong>Interpretation</strong>: In this context, it combines probabilities for all correct or incorrect pairs.</li>
+</ul>
+</li>
+<li>
+<p><strong>$\sum$</strong>:</p>
+<ul>
+<li><strong>Meaning</strong>: Represents the sum of multiple terms.</li>
+<li><strong>Interpretation</strong>: It aggregates the log probabilities for all pairs in $D_{wc}$ or $D_{wr}$.</li>
+</ul>
+</li>
+</ol>
+<h3 id="overall-objective">Overall Objective</h3>
+<ul>
+<li><strong>Objective Function</strong>:
+$$
+\text{maximize} \sum_{(w,c) \in D_{wc}} \log P(z = 1 | w, c) + \sum_{(w,r) \in D_{wr}} \log P(z = 0 | w, r)
+$$
+<ul>
+<li><strong>Interpretation</strong>: The goal is to maximize the total log probability of correct pairs while minimizing the log probability of incorrect pairs. This helps the model learn which contexts are valid for which words.</li>
+</ul>
+</li>
+</ul>
+<h3 id="combining-probabilities">Combining Probabilities</h3>
+<ol>
+<li>
+<p><strong>Starting Equation</strong>:
+$$
+\text{maximize} \prod_{(w,c) \in D_{wc}} P(z = 1 | w, c) \prod_{(w,r) \in D_{wr}} P(z = 0 | w, r)
+$$</p>
+<ul>
+<li><strong>Meaning</strong>: We want to maximize the product of the probabilities that a word-context pair $(w, c)$ is correct and that a word-random context pair $(w, r)$ is incorrect.</li>
+</ul>
+</li>
+<li>
+<p><strong>Reformulation</strong>:
+$$
+= \text{maximize} \prod_{(w,c) \in D_{wc}} P(z = 1 | w, c) \prod_{(w,r) \in D_{wr}} (1 - P(z = 1 | w, r))
+$$</p>
+<ul>
+<li><strong>Meaning</strong>: The second term changes from $P(z = 0 | w, r)$ to $1 - P(z = 1 | w, r)$ because $P(z = 0 | w, r) = 1 - P(z = 1 | w, r)$.</li>
+</ul>
+</li>
+</ol>
+<h3 id="logarithmic-transformation">Logarithmic Transformation</h3>
+<ol start="3">
+<li><strong>Taking the Logarithm</strong>:
+$$
+= \text{maximize} \sum_{(w,c) \in D_{wc}} \log P(z = 1 | w, c) + \sum_{(w,r) \in D_{wr}} \log (1 - P(z = 1 | w, r))
+$$
+<ul>
+<li><strong>Meaning</strong>: The product of probabilities is converted to a sum of log probabilities, which is mathematically more manageable.</li>
+</ul>
+</li>
+</ol>
+<h3 id="substituting-probability-models">Substituting Probability Models</h3>
+<ol start="4">
+<li>
+<p><strong>Substituting the Sigmoid Function</strong>:
+$$
+= \text{maximize} \sum_{(w,c) \in D_{wc}} \log \left( \frac{1}{1 + e^{-v_c^T v_w}} \right) + \sum_{(w,r) \in D_{wr}} \log \left( \frac{1}{1 + e^{v_r^T v_w}} \right)
+$$</p>
+<ul>
+<li><strong>Meaning</strong>: Here, $v_c^T v_w$ is the dot product of the context and target word embeddings. The sigmoid function $\sigma$ is applied to model the probabilities.</li>
+</ul>
+</li>
+<li>
+<p><strong>Final Objective Function</strong>:
+$$
+= \text{maximize} \sum_{(w,c) \in D_{wc}} \log \sigma(v_c^T v_w) + \sum_{(w,r) \in D_{wr}} \log \sigma(-v_r^T v_w)
+$$</p>
+<ul>
+<li><strong>Meaning</strong>: This step aggregates the log probabilities of correct pairs and the log probabilities of incorrect pairs using the sigmoid function.</li>
+</ul>
+</li>
+</ol>
+<h3 id="definitions-of-terms">Definitions of Terms</h3>
+<ul>
+<li><strong>Sigmoid Function</strong>:
+$$
+\sigma(x) = \frac{1}{1 + e^{-x}}
+$$
+<ul>
+<li><strong>Meaning</strong>: The sigmoid function transforms any real-valued number into the range [0, 1], allowing it to be interpreted as a probability.</li>
+</ul>
+</li>
+</ul>
+<h3 id="interpretation-of-the-objective-function">Interpretation of the Objective Function</h3>
+<ul>
+<li>The objective function is structured to:
+<ul>
+<li><strong>Maximize the log probability</strong> of the correct word-context pairs $(w, c)$ being classified correctly (i.e., $z = 1$).</li>
+<li><strong>Maximize the log probability</strong> of the incorrect word-context pairs $(w, r)$ being classified as incorrect (i.e., $z = 0$).</li>
+</ul>
+</li>
+</ul>
+<h3 id="summary">Summary</h3>
+<ol>
+<li><strong>Maximization Goal</strong>: The overall aim is to adjust the word and context embeddings to improve the probabilities of correct pairs and reduce the probabilities of incorrect pairs.</li>
+<li><strong>Role of Dot Products</strong>: The dot products $v_c^T v_w$ and $-v_r^T v_w$ play a crucial role in determining how similar or dissimilar the word and context pairs are, influencing the sigmoid function's output.</li>
+<li><strong>Logarithmic Form</strong>: Taking the logarithm simplifies the optimization process, making it easier to work with sums rather than products.</li>
+</ol>
+<h3 id="negative-sampling-overview">Negative Sampling Overview</h3>
+<ol>
+<li>
+<p><strong>Purpose of Negative Sampling</strong>:</p>
+<ul>
+<li>Negative sampling is used to improve the efficiency of training word embeddings by reducing the computational load associated with softmax. Instead of predicting probabilities for all words in the vocabulary, the model focuses on a few sampled words.</li>
+</ul>
+</li>
+<li>
+<p><strong>Sampling k Negative Pairs</strong>:</p>
+<ul>
+<li>For every positive word-context pair $(w, c)$ (where $w$ is the target word and $c$ is the correct context word), the model samples <strong>k negative pairs</strong> $(w, r)$. Here, $r$ represents a randomly selected context word that is <strong>not</strong> a valid context for $w$.</li>
+</ul>
+</li>
+<li>
+<p><strong>Size of the Dataset</strong>:</p>
+<ul>
+<li>Given that there are $|D_{wc}|$ positive pairs, the total number of pairs in the dataset $D$ becomes:
+$$ |D| = k \cdot |D_{wc}| $$</li>
+<li>This means the size of the dataset now includes the original positive pairs plus the additional negative pairs, enhancing the learning process.</li>
+</ul>
+</li>
+</ol>
+<h3 id="probability-distribution-for-sampling">Probability Distribution for Sampling</h3>
+<ol start="4">
+<li><strong>Modified Unigram Distribution</strong>:
+<ul>
+<li>The random context word $r$ is drawn from a <strong>modified unigram distribution</strong>. The probability of selecting a context word $r$ is determined based on its frequency in the corpus:
+$$ P(r) = \frac{\text{count}(r)^{3/4}}{N} $$</li>
+<li><strong>Where</strong>:
+<ul>
+<li>$\text{count}(r)$ is the number of times the word $r$ appears in the corpus.</li>
+<li>$N$ is the total number of words in the corpus (i.e., the sum of all words in all sentences).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="key-concepts-explained">Key Concepts Explained</h3>
+<ul>
+<li>
+<p><strong>Unigram Distribution</strong>: This is a simple probability distribution where the probability of each word is proportional to its frequency in the corpus. However, in this case, the counts are raised to the power of $3/4$ to reduce the likelihood of selecting very frequent words as negatives. This adjustment helps to balance the sampling process, making it less biased toward very common words.</p>
+</li>
+<li>
+<p><strong>Total Number of Words $N$</strong>: The total number of words in the corpus serves as a normalizing factor. It ensures that the probabilities sum to 1 when considering all words in the vocabulary.</p>
+</li>
+</ul>
+<h3 id="summary">Summary</h3>
+<ol>
+<li>
+<p><strong>Negative Sampling</strong>: A technique to make training more efficient by using a smaller number of negative samples, leading to faster convergence of the model.</p>
+</li>
+<li>
+<p><strong>Sampling Distribution</strong>: The modified unigram distribution ensures that less frequent words have a higher chance of being selected as negative samples compared to very frequent words, helping to create more informative negative pairs.</p>
+</li>
+<li>
+<p><strong>Impact on Training</strong>: By employing negative sampling, the Skip-gram model can effectively learn word embeddings with fewer computational resources while improving the overall quality of the embeddings produced.</p>
+</li>
+</ol>
+<h3 id="overview-of-contrastive-estimation">Overview of Contrastive Estimation</h3>
+<ol>
+<li>
+<p><strong>Definition</strong>:</p>
+<ul>
+<li>Contrastive estimation is a method used to train models by contrasting positive examples (correct word-context pairs) against negative examples (incorrect pairs). This approach helps to reinforce the model’s understanding of valid word relationships while discouraging invalid ones.</li>
+</ul>
+</li>
+<li>
+<p><strong>Contextual Setup</strong>:</p>
+<ul>
+<li>In your example, you have a positive sentence: <strong>&quot;He sat on a chair.&quot;</strong></li>
+<li>An associated negative example might be: <strong>&quot;He sat abracadabra a chair.&quot;</strong></li>
+<li>The goal is to ensure that the model can differentiate between valid context pairs and nonsensical ones.</li>
+</ul>
+</li>
+</ol>
+<h3 id="softmax-function-and-its-challenges">Softmax Function and its Challenges</h3>
+<ol start="3">
+<li>
+<p><strong>Softmax Function</strong>:</p>
+<ul>
+<li>The softmax function is used to convert raw scores (logits) into probabilities. However, it can be computationally expensive, especially when dealing with large vocabularies.</li>
+</ul>
+</li>
+<li>
+<p><strong>Solutions to the Softmax Issue</strong>:</p>
+<ul>
+<li><strong>Solution 1</strong>: Use <strong>negative sampling</strong> to reduce the number of comparisons needed.</li>
+<li><strong>Solution 2</strong>: Employ <strong>contrastive estimation</strong> to maximize the difference between scores for positive and negative pairs.</li>
+<li><strong>Solution 3</strong>: Implement <strong>hierarchical softmax</strong>, which reduces complexity by structuring the output layer.</li>
+</ul>
+</li>
+</ol>
+<h3 id="objective-of-contrastive-estimation">Objective of Contrastive Estimation</h3>
+<ol start="5">
+<li><strong>Scoring Mechanism</strong>:
+<ul>
+<li>Let $s$ represent the score of the positive context (e.g., for &quot;sat&quot; in &quot;He sat on a chair&quot;).</li>
+<li>Let $sc$ represent the score of the negative context (e.g., for &quot;abracadabra&quot; in &quot;He sat abracadabra a chair&quot;).</li>
+<li>The objective is to maximize the difference between $s$ and $sc$:
+$$
+\text{maximize } (s - sc)
+$$</li>
+<li>Additionally, you want this difference to be at least some margin $m$:
+$$
+\text{maximize } (s - (sc + m))
+$$
+<ul>
+<li>This ensures that the positive score is not only greater than the negative score but also exceeds it by a margin $m$.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="mathematical-formulation">Mathematical Formulation</h3>
+<ol start="6">
+<li><strong>Final Objective Function</strong>:
+<ul>
+<li>The objective can be expressed as:
+$$
+\text{maximize } \max(0, s - (sc + m))
+$$</li>
+<li>Here, the function returns the positive difference if it exceeds $sc + m$; otherwise, it returns zero (i.e., if the positive score does not surpass the negative score by the required margin).</li>
+</ul>
+</li>
+</ol>
+<h3 id="implications">Implications</h3>
+<ul>
+<li>
+<p><strong>Training Objective</strong>: By maximizing this expression, the model learns to give significantly higher scores to valid word-context pairs compared to invalid ones, effectively enhancing its ability to discriminate between correct and incorrect relationships.</p>
+</li>
+<li>
+<p><strong>Effectiveness of Contrastive Estimation</strong>: This method allows the model to improve its predictions without needing to compute the softmax over the entire vocabulary, thus making training more efficient.</p>
+</li>
+</ul>
+<h3 id="summary">Summary</h3>
+<ol>
+<li><strong>Contrastive Estimation</strong>: A training approach that contrasts positive and negative examples to reinforce learning.</li>
+<li><strong>Softmax Alternatives</strong>: Techniques like negative sampling and contrastive estimation help mitigate the computational burden of softmax.</li>
+<li><strong>Objective Function</strong>: Focuses on ensuring positive scores exceed negative scores by a defined margin, promoting robust embeddings.</li>
+</ol>
+<h3 id="hierarchical-softmax-overview">Hierarchical Softmax Overview</h3>
+<ol>
+<li>
+<p><strong>Purpose</strong>:</p>
+<ul>
+<li>Hierarchical softmax is an efficient alternative to the traditional softmax function used in training neural networks, especially in NLP tasks like word embeddings. It is designed to handle large vocabularies more efficiently.</li>
+</ul>
+</li>
+<li>
+<p><strong>Binary Tree Structure</strong>:</p>
+<ul>
+<li>The hierarchical softmax constructs a <strong>binary tree</strong> where:
+<ul>
+<li>Each <strong>leaf node</strong> corresponds to a unique word in the vocabulary.</li>
+<li>The number of leaf nodes is equal to the number of words, denoted as $V$.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Path Representation</strong>:</p>
+<ul>
+<li>For any word $w$, there is a unique path from the <strong>root node</strong> to the leaf node representing that word.</li>
+<li>Let $l(w_1), l(w_2), \ldots, l(w_p)$ be the nodes along this path.</li>
+</ul>
+</li>
+<li>
+<p><strong>Binary Vector Encoding</strong>:</p>
+<ul>
+<li>A <strong>binary vector</strong> $\pi(w)$ encodes the path from the root to the leaf node for word $w$:
+<ul>
+<li>$\pi(w)_k = 1$: Indicates a left branch taken at node $l(w_k)$.</li>
+<li>$\pi(w)_k = 0$: Indicates a right branch taken at node $l(w_k)$.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="model-parameters">Model Parameters</h3>
+<ol start="5">
+<li>
+<p><strong>Internal Node Vectors</strong>:</p>
+<ul>
+<li>Each <strong>internal node</strong> in the tree is associated with a vector $u_i$. These vectors are learned during training and contribute to the semantic representation of the words.</li>
+</ul>
+</li>
+<li>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li>The model has parameters that include:
+<ul>
+<li>$W_{\text{context}}$: A matrix representing context information for the words.</li>
+<li>$u_1, u_2, \ldots, u_V$: Vectors for each internal node in the binary tree.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="how-hierarchical-softmax-works">How Hierarchical Softmax Works</h3>
+<ol start="7">
+<li>
+<p><strong>Probability Calculation</strong>:</p>
+<ul>
+<li>To compute the probability of a word $w$ given a context $c$ using hierarchical softmax, the model traverses the tree:
+<ul>
+<li>For each node in the path to the leaf node corresponding to $w$, a binary decision is made (left or right).</li>
+<li>This involves calculating the sigmoid function for each internal node:
+$$
+P(w | c) = \prod_{k=1}^{p} \sigma(u_{l(w_k)}^T v_c)
+$$</li>
+<li>Here, $v_c$ is the context vector, and $u_{l(w_k)}$ is the vector associated with the internal node at position $k$ in the path to the leaf node representing $w$.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Efficiency</strong>:</p>
+<ul>
+<li>The advantage of hierarchical softmax is that instead of computing the softmax over all $V$ words, it only requires a fixed number of calculations proportional to the depth of the tree (usually $\log_2 V$). This makes it significantly faster for large vocabularies.</li>
+</ul>
+</li>
+</ol>
+<h3 id="advantages-of-hierarchical-softmax">Advantages of Hierarchical Softmax</h3>
+<ol start="9">
+<li>
+<p><strong>Scalability</strong>:</p>
+<ul>
+<li>Suitable for large vocabularies, as it scales logarithmically rather than linearly with the number of words.</li>
+</ul>
+</li>
+<li>
+<p><strong>Memory Efficiency</strong>:</p>
+<ul>
+<li>Reduces the memory footprint needed to store and compute the probabilities for word predictions, making it easier to work with large datasets.</li>
+</ul>
+</li>
+<li>
+<p><strong>Improved Training Speed</strong>:</p>
+<ul>
+<li>Speeds up training times due to reduced computational complexity, which is especially beneficial in models with large vocabularies.</li>
+</ul>
+</li>
+</ol>
+<h3 id="summary-of-key-points">Summary of Key Points</h3>
+<ul>
+<li><strong>Hierarchical Softmax</strong>: An efficient softmax alternative using a binary tree structure.</li>
+<li><strong>Binary Tree</strong>: Each word is a leaf node, with a unique path from the root.</li>
+<li><strong>Binary Vector $\pi(w)$</strong>: Encodes the path taken to reach the word $w$.</li>
+<li><strong>Internal Node Vectors $u_i$</strong>: Parameters contributing to semantic representation.</li>
+<li><strong>Efficiency</strong>: Only requires logarithmic computations with respect to vocabulary size.</li>
+</ul>
+<h3 id="conclusion">Conclusion</h3>
+<p>Hierarchical softmax provides an elegant solution to the challenges posed by traditional softmax in natural language processing, allowing for efficient learning and representation of words in large vocabularies. It leverages tree structures and binary encoding to minimize computational costs while maintaining effective learning dynamics.</p>
+<h3 id="key-concepts">Key Concepts</h3>
+<ol>
+<li>
+<p><strong>Probability of a Word Given Context</strong>:</p>
+<ul>
+<li>For a given word $w$ and context $c$, we are interested in calculating the probability $p(w|v_c)$, where $v_c$ is the vector representation of the context.</li>
+</ul>
+</li>
+<li>
+<p><strong>Modeling the Probability</strong>:</p>
+<ul>
+<li>The probability of a word given the context is modeled as a product of probabilities along a unique path in the binary tree:
+$$
+p(w|v_c) = \prod_k \pi(w_k|v_c)
+$$</li>
+<li>Here, $k$ indexes the nodes along the path from the root node to the leaf node corresponding to the word $w$.</li>
+</ul>
+</li>
+</ol>
+<h3 id="example-of-probability-calculation">Example of Probability Calculation</h3>
+<ol start="3">
+<li><strong>Example for a Specific Word</strong>:
+<ul>
+<li>For the word <strong>&quot;on&quot;</strong> given the context <strong>&quot;sat&quot;</strong>:
+$$
+P(on|v_{sat}) = P(\pi(on)<em>1=1|v</em>{sat}) \times P(\pi(on)<em>2=0|v</em>{sat}) \times P(\pi(on)<em>3=0|v</em>{sat})
+$$</li>
+<li>This equation demonstrates that the overall probability of predicting the word <strong>&quot;on&quot;</strong> depends on the probabilities of traversing the binary tree correctly through its left and right branches.</li>
+</ul>
+</li>
+</ol>
+<h3 id="probability-calculation-details">Probability Calculation Details</h3>
+<ol start="4">
+<li><strong>Modeling Branching Decisions</strong>:
+<ul>
+<li>Each decision to branch left or right at a node $i$ can be represented using a sigmoid function:
+<ul>
+<li>For branching left:
+$$
+P(\pi(on)_i = 1) = \frac{1}{1 + e^{-v_c^T u_i}}
+$$</li>
+<li>For branching right:
+$$
+P(\pi(on)_i = 0) = 1 - P(\pi(on)_i = 1) = \frac{e^{-v_c^T u_i}}{1 + e^{-v_c^T u_i}} = \frac{1}{1 + e^{v_c^T u_i}}
+$$</li>
+</ul>
+</li>
+<li>Here, $u_i$ is the vector representation of the internal node $i$, and $v_c$ is the vector representation of the context word.</li>
+</ul>
+</li>
+</ol>
+<h3 id="semantic-relationships">Semantic Relationships</h3>
+<ol start="5">
+<li><strong>Node Representation and Similarity</strong>:
+<ul>
+<li>The model ensures that:
+<ul>
+<li>The representation of a context word $v_c$ will have <strong>high similarity</strong> with the representation of the node $u_i$ if the path to the word $w$ branches left at node $i$.</li>
+<li>Conversely, it will have <strong>low similarity</strong> if the path branches right at node $i$.</li>
+</ul>
+</li>
+<li>This relationship helps to enforce semantic meanings, as context words that appear with the same target words will have similar representations.</li>
+</ul>
+</li>
+</ol>
+<h3 id="summary-of-key-points">Summary of Key Points</h3>
+<ul>
+<li><strong>Path Representation</strong>: The probability of predicting a word can be derived from the unique path taken in the binary tree, highlighting the hierarchical structure.</li>
+<li><strong>Sigmoid Function</strong>: The sigmoid function is used to model decisions at each node (left or right), which is critical for estimating the probability of a word given its context.</li>
+<li><strong>Semantic Similarity</strong>: The model inherently captures semantic relationships through the similarities of vector representations for words and context, enabling more meaningful predictions.</li>
+</ul>
+<h3 id="conclusion">Conclusion</h3>
+<p>Hierarchical softmax provides a computationally efficient way to predict word probabilities based on context by leveraging a binary tree structure and capturing semantic relationships through learned embeddings. The transition from words to probabilities using a path-based approach simplifies the learning process while ensuring meaningful representation.</p>
+<hr>
+<h3 id="probability-equation">Probability Equation</h3>
+<ol>
+<li><strong>Probability of a Word Given Context</strong>:
+<ul>
+<li>The equation you provided is:
+$$
+P(w|v_c) = \prod_{k=1}^{|\pi(w)|} P(\pi(w)_k|v_c)
+$$</li>
+<li>In this equation:
+<ul>
+<li>$P(w|v_c)$ represents the probability of the word $w$ given the context vector $v_c$.</li>
+<li>$\pi(w)$ is the path from the root of the binary tree to the leaf node corresponding to the word $w$.</li>
+<li>$|\pi(w)|$ is the length of that path, or the number of nodes traversed to reach the leaf node representing $w$.</li>
+<li>Each $P(\pi(w)_k|v_c)$ computes the probability of taking the $k^{th}$ step in the path (either left or right) based on the context vector.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="efficiency-of-hierarchical-softmax">Efficiency of Hierarchical Softmax</h3>
+<ol start="2">
+<li><strong>Efficiency Compared to Traditional Softmax</strong>:
+<ul>
+<li>Using hierarchical softmax significantly reduces computational complexity:
+<ul>
+<li>Instead of requiring $|V|$ computations (where $|V|$ is the vocabulary size) as in traditional softmax, hierarchical softmax only requires $|\pi(w)|$ computations.</li>
+<li>Since $|\pi(w)|$ (the depth of the binary tree) is typically much smaller than $|V|$, this makes hierarchical softmax much faster and more efficient, especially for large vocabularies.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="constructing-the-binary-tree">Constructing the Binary Tree</h3>
+<ol start="3">
+<li>
+<p><strong>Binary Tree Construction</strong>:</p>
+<ul>
+<li><strong>Random Arrangement</strong>:
+<ul>
+<li>A practical aspect of hierarchical softmax is that the binary tree does not need to follow any specific structure regarding word semantics.</li>
+<li>In practice, even a <strong>random arrangement</strong> of words on the leaf nodes of the binary tree performs well. This means that the tree can be constructed without any specific consideration of the relationships between words; as long as each word is a leaf node, the model can effectively learn word representations.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Why Random Works</strong>:</p>
+<ul>
+<li>The reason a random arrangement can be effective is that the model learns the necessary semantic relationships during training based on the context in which words appear, rather than relying on the initial arrangement of the tree.</li>
+<li>As the training progresses, the embeddings (representations) of the words will adjust based on their co-occurrences with context words, making the specific arrangement less critical.</li>
+</ul>
+</li>
+</ol>
+<h3 id="summary-of-key-points">Summary of Key Points</h3>
+<ul>
+<li><strong>Computational Efficiency</strong>: Hierarchical softmax reduces the number of computations needed to calculate the probability of a word given context from the size of the vocabulary to the depth of the binary tree.</li>
+<li><strong>Random Binary Tree</strong>: A random arrangement of words in the binary tree is sufficient for effective training, as the model learns relationships through context rather than relying on the tree structure.</li>
+<li><strong>Learning Process</strong>: The training process adjusts word embeddings based on their contextual relationships, allowing the model to effectively capture semantics.</li>
+</ul>
+<h3 id="1-overview-of-glove-representations">1. Overview of GloVe Representations</h3>
+<ul>
+<li>
+<p><strong>Count-Based Methods</strong>:</p>
+<ul>
+<li>These methods, such as Singular Value Decomposition (SVD), rely on global co-occurrence counts from a corpus to compute word representations.</li>
+<li>They use the entire corpus to gather statistics about how often words appear together, which captures the relationship between words.</li>
+</ul>
+</li>
+<li>
+<p><strong>Predictive Methods</strong>:</p>
+<ul>
+<li>These methods learn word representations using co-occurrence information in a more dynamic way.</li>
+<li>Instead of relying solely on global statistics, they predict word context based on surrounding words in a given window.</li>
+</ul>
+</li>
+<li>
+<p><strong>Combining Both Approaches</strong>:</p>
+<ul>
+<li>The idea is to leverage the strengths of both count-based and predictive methods to create more accurate word representations. This approach aims to ensure that word vectors reflect true co-occurrence statistics while still being learned through the prediction of contexts.</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-corpus-example">2. Corpus Example</h3>
+<ul>
+<li>
+<p><strong>Example Sentences</strong>:</p>
+<ul>
+<li>&quot;Human machine interface for computer applications&quot;</li>
+<li>&quot;User opinion of computer system response time&quot;</li>
+<li>&quot;User interface management system&quot;</li>
+<li>&quot;System engineering for improved response time&quot;</li>
+</ul>
+</li>
+<li>
+<p><strong>Co-occurrence Matrix (X)</strong>:</p>
+<ul>
+<li>This matrix captures the frequency of co-occurrences between words in the corpus.</li>
+<li>Each entry $X_{ij}$ represents how often word $i$ appears in the context of word $j$.</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-co-occurrence-count-notation">3. Co-occurrence Count Notation</h3>
+<ul>
+<li><strong>Co-occurrence Probabilities</strong>:
+<ul>
+<li>The probability of word $j$ occurring in the context of word $i$ is given by:
+$$
+P(j|i) = \frac{X_{ij}}{X_i}
+$$</li>
+<li>Here, $X_{ij}$ is the co-occurrence count, and $X_i$ is the total count of occurrences of word $i$.</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-learning-word-vectors">4. Learning Word Vectors</h3>
+<ul>
+<li><strong>Objective of Learning</strong>:
+<ul>
+<li>The goal is to learn word vectors $v_i$ and $v_j$ such that their dot product is equal to the logarithm of their co-occurrence probability:
+$$
+v_i^T v_j \approx \log P(j|i) = \log X_{ij} - \log X_i
+$$</li>
+<li>This means that the dot product of the vectors should reflect the co-occurrence statistics.</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-optimization-problem-formulation">5. Optimization Problem Formulation</h3>
+<ul>
+<li>
+<p><strong>Combined Objective</strong>:</p>
+<ul>
+<li>To enforce the relationship between the word vectors and the co-occurrence counts, we derive:
+$$
+v_i^T v_j + b_i + b_j = \log X_{ij}
+$$</li>
+<li>Here, $b_i$ and $b_j$ are biases associated with words $i$ and $j$.</li>
+</ul>
+</li>
+<li>
+<p><strong>Optimization Function</strong>:</p>
+<ul>
+<li>The optimization problem can be framed as minimizing the squared difference between the predicted value (from the model) and the actual log co-occurrence:
+$$
+\min_{v_i, v_j, b_i, b_j} \left( v_i^T v_j + b_i + b_j - \log X_{ij} \right)^2
+$$</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-weighting-function">6. Weighting Function</h3>
+<ul>
+<li>
+<p><strong>Challenge with Equal Weighting</strong>:</p>
+<ul>
+<li>The initial formulation treats all co-occurrences equally, which can be a drawback since rare and frequent words may not contribute equally to learning.</li>
+</ul>
+</li>
+<li>
+<p><strong>Weighted Optimization</strong>:</p>
+<ul>
+<li>To address this, a weighting function $f(X_{ij})$ is introduced, which adjusts the contributions of different co-occurrences:
+$$
+\min_{v_i, v_j, b_i, b_j} f(X_{ij}) \left( v_i^T v_j + b_i + b_j - \log X_{ij} \right)^2
+$$</li>
+</ul>
+</li>
+<li>
+<p><strong>Desired Properties of Weighting Function</strong>:</p>
+<ul>
+<li>The weighting function $f(X_{ij})$ should ensure that neither rare nor frequent words are over-weighted.</li>
+<li>A common form is:
+$$
+f(x) = \left( \frac{x}{x_{\text{max}}} \right)^\alpha \quad \text{if } x &lt; x_{\text{max}}
+$$</li>
+<li>Here, $x_{\text{max}}$ is a threshold that can be tuned for specific datasets.</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-summary">7. Summary</h3>
+<ul>
+<li>GloVe combines the strengths of count-based and predictive methods to generate word representations that reflect true word relationships.</li>
+<li>The use of a co-occurrence matrix allows for a clear statistical foundation for learning.</li>
+<li>The optimization process aims to minimize the difference between predicted and actual log probabilities while incorporating a weighting function to manage the contribution of each co-occurrence.</li>
+</ul>
+<hr>
+<h3 id="table-structure">Table Structure</h3>
+<p>The table can be read as follows:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>human</strong></th>
+<th><strong>machine</strong></th>
+<th><strong>system</strong></th>
+<th><strong>for</strong></th>
+<th><strong>...</strong></th>
+<th><strong>user</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>human</strong></td>
+<td>2.01</td>
+<td>2.01</td>
+<td>0.23</td>
+<td>2.14</td>
+<td>...</td>
+<td>0.43</td>
+</tr>
+<tr>
+<td><strong>machine</strong></td>
+<td>2.01</td>
+<td>2.01</td>
+<td>0.23</td>
+<td>2.14</td>
+<td>...</td>
+<td>0.43</td>
+</tr>
+<tr>
+<td><strong>system</strong></td>
+<td>0.23</td>
+<td>0.23</td>
+<td>1.17</td>
+<td>0.96</td>
+<td>...</td>
+<td>1.29</td>
+</tr>
+<tr>
+<td><strong>for</strong></td>
+<td>2.14</td>
+<td>2.14</td>
+<td>0.96</td>
+<td>1.87</td>
+<td>...</td>
+<td>-0.13</td>
+</tr>
+<tr>
+<td><strong>...</strong></td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td><strong>user</strong></td>
+<td>0.43</td>
+<td>0.43</td>
+<td>1.29</td>
+<td>-0.13</td>
+<td>...</td>
+<td>1.71</td>
+</tr>
+</tbody>
+</table>
+<h3 id="explanation-of-each-element">Explanation of Each Element</h3>
+<ul>
+<li>
+<p><strong>Rows and Columns</strong>:</p>
+<ul>
+<li>The rows and columns of the matrix represent different words in the vocabulary. For example, &quot;human&quot;, &quot;machine&quot;, &quot;system&quot;, &quot;for&quot;, and &quot;user&quot; are all words from the corpus.</li>
+</ul>
+</li>
+<li>
+<p><strong>Matrix Entries</strong>:</p>
+<ul>
+<li>
+<p>Each entry in the matrix, such as the one at the intersection of &quot;human&quot; and &quot;system&quot; (0.23), represents the <strong>co-occurrence count</strong> or weight between the two words. This could denote how frequently these words appear together in the context of the surrounding text.</p>
+</li>
+<li>
+<p><strong>Positive Values</strong>: The positive values indicate how frequently the word pair occurs together. For instance, &quot;human&quot; appears in the context of &quot;for&quot; with a frequency of 2.14, suggesting that whenever &quot;for&quot; appears, &quot;human&quot; also appears often in the nearby context.</p>
+</li>
+<li>
+<p><strong>Negative Values</strong>: The entry -0.13 for the co-occurrence between &quot;for&quot; and &quot;user&quot; could suggest an unusual or rare negative association, or it could indicate a reduced count or weight in the context, possibly hinting at infrequent co-occurrences or adjustments made during preprocessing.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="purpose-of-the-co-occurrence-matrix">Purpose of the Co-occurrence Matrix</h3>
+<ol>
+<li>
+<p><strong>Semantic Relationships</strong>:</p>
+<ul>
+<li>This matrix serves as a representation of semantic relationships between words based on their co-occurrence patterns in the corpus. Words that frequently occur together tend to be semantically related.</li>
+</ul>
+</li>
+<li>
+<p><strong>Word Vector Learning</strong>:</p>
+<ul>
+<li>In models like GloVe (Global Vectors for Word Representation), this co-occurrence matrix is used to train word vectors. The goal is to learn a set of word embeddings (vector representations) such that the dot product of the vectors reflects the log probability of the co-occurrence counts.</li>
+</ul>
+</li>
+<li>
+<p><strong>Contextual Information</strong>:</p>
+<ul>
+<li>The matrix captures contextual information. For example, words that share common contexts (like &quot;human&quot; and &quot;machine&quot;) can be grouped or represented similarly in a high-dimensional vector space.</li>
+</ul>
+</li>
+<li>
+<p><strong>Dimensionality Reduction</strong>:</p>
+<ul>
+<li>High-dimensional co-occurrence matrices can be reduced to lower-dimensional vector representations (embeddings), making them easier to work with for various natural language processing tasks such as classification, clustering, and semantic analysis.</li>
+</ul>
+</li>
+</ol>
+<h3 id="summary">Summary</h3>
+<p>The co-occurrence matrix is a crucial element in natural language processing, enabling the extraction of meaningful relationships between words based on their usage in context. By analyzing these co-occurrences, models can learn to represent words in a way that captures their meanings and relationships in a mathematically tractable format.</p>
+<hr>
+<h3 id="1-semantic-relatedness">1. Semantic Relatedness</h3>
+<p><strong>Definition</strong>: Semantic relatedness measures how closely related two words are in meaning.</p>
+<ul>
+<li>
+<p><strong>Human Judgments</strong>:</p>
+<ul>
+<li>Humans are asked to judge the relatedness between pairs of words. For example, given the pair <strong>(cat, dog)</strong>, a human might assign a score of $$ S_{\text{human}}(\text{cat, dog}) = 0.8 $$, indicating a high degree of relatedness.</li>
+</ul>
+</li>
+<li>
+<p><strong>Model Computation</strong>:</p>
+<ul>
+<li>Compute the cosine similarity between the word vectors corresponding to the two words:
+$$
+S_{\text{model}}(\text{cat, dog}) = \frac{v_{\text{cat}}^T v_{\text{dog}}}{|v_{\text{cat}}| |v_{\text{dog}}|}
+$$</li>
+<li>If the model's cosine similarity for the same pair is $$ S_{\text{model}}(\text{cat, dog}) = 0.7 $$, it suggests a good, but not perfect, alignment with human judgment.</li>
+</ul>
+</li>
+<li>
+<p><strong>Correlation Analysis</strong>:</p>
+<ul>
+<li>Given a large dataset of word pairs, compute the correlation between the model’s scores ($$ S_{\text{model}} $$) and human judgments ($$ S_{\text{human}} $$).</li>
+<li>Compare different models:
+<ul>
+<li><strong>Model 1</strong> is considered better than <strong>Model 2</strong> if:
+$$
+\text{correlation}(S_{\text{model}<em>1}, S</em>{\text{human}}) &gt; \text{correlation}(S_{\text{model}<em>2}, S</em>{\text{human}})
+$$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-synonym-detection">2. Synonym Detection</h3>
+<p><strong>Definition</strong>: The task of identifying a synonym for a given term from a list of candidates.</p>
+<ul>
+<li>
+<p><strong>Example</strong>:</p>
+<ul>
+<li><strong>Term</strong>: <em>levied</em></li>
+<li><strong>Candidates</strong>: <em>unposed, believed, requested, correlated</em></li>
+</ul>
+</li>
+<li>
+<p><strong>Computation</strong>:</p>
+<ul>
+<li>For each candidate, compute the cosine similarity with the term:
+$$
+\text{Synonym} = \text{argmax}<em>{c \in C} \left(\frac{v</em>{\text{term}}^T v_{c}}{|v_{\text{term}}| |v_{c}|}\right)
+$$</li>
+<li>Select the candidate with the largest cosine similarity.</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluation</strong>:</p>
+<ul>
+<li>Compute the accuracy of different models based on how many times they correctly identify the synonym.</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-analogy">3. Analogy</h3>
+<p><strong>Definition</strong>: The task of solving analogies, typically framed as &quot;A is to B as C is to D.&quot;</p>
+<ul>
+<li>
+<p><strong>Semantic Analogy</strong>:</p>
+<ul>
+<li>Example: Find the nearest neighbor for <strong>sister</strong> using the relation:
+$$
+v_{\text{brother}} + v_{\text{grandson}} \approx v_{\text{sister}} + v_{\text{?}}
+$$</li>
+<li>This implies searching for a vector $$ v_{?} $$ that maintains the semantic relationship.</li>
+</ul>
+</li>
+<li>
+<p><strong>Syntactic Analogy</strong>:</p>
+<ul>
+<li>Example: Work with syntactic relationships:
+$$
+v_{\text{works}} - v_{\text{work}} + v_{\text{speak}} \approx v_{\text{?}}
+$$</li>
+<li>This reflects a different aspect of word relationships based on grammatical forms.</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluating Algorithms</strong>:</p>
+<ul>
+<li><strong>Boroni et al. (2014)</strong> found that predictive models (like Word2Vec) consistently outperform count-based models (like GloVe) in all evaluation tasks.</li>
+<li><strong>Levy et al. (2015)</strong> conducted a thorough analysis and found that:
+<ul>
+<li>Singular Value Decomposition (SVD) performed better than prediction-based models on similarity tasks.</li>
+<li>Prediction-based models excelled on analogy tasks.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>The relationship between <strong>Singular Value Decomposition (SVD)</strong> and <strong>Word2Vec</strong> lies in how both techniques approach the task of generating word embeddings from co-occurrence information in a corpus.</p>
+<h3 id="1-matrix-factorization">1. Matrix Factorization</h3>
+<p><strong>SVD</strong>:</p>
+<ul>
+<li>
+<p>SVD is a technique used to factorize a matrix into three components:
+$$
+M \approx U \Sigma V^T
+$$</p>
+<ul>
+<li><strong>M</strong>: Original matrix (e.g., a co-occurrence matrix).</li>
+<li><strong>U</strong>: Left singular vectors (representations of words).</li>
+<li><strong>Σ</strong>: Diagonal matrix containing singular values.</li>
+<li><strong>V^T</strong>: Right singular vectors (representations of context).</li>
+</ul>
+</li>
+<li>
+<p>In the context of word embeddings, SVD operates on a co-occurrence matrix that captures how often words appear together across the corpus.</p>
+</li>
+</ul>
+<p><strong>Word2Vec</strong>:</p>
+<ul>
+<li>
+<p>Word2Vec, particularly in its Continuous Bag of Words (CBOW) and Skip-Gram models, also performs a form of matrix factorization.</p>
+</li>
+<li>
+<p>It does this indirectly by learning two separate weight matrices:</p>
+<ul>
+<li><strong>W_context</strong>: Represents context words.</li>
+<li><strong>W_word</strong>: Represents target words.</li>
+</ul>
+</li>
+<li>
+<p>These matrices can be thought of as learned embeddings for words and their contexts.</p>
+</li>
+</ul>
+<h3 id="2-relationship-between-the-models">2. Relationship Between the Models</h3>
+<ul>
+<li>
+<p>Levy et al. (2015) showed that Word2Vec can be seen as performing an implicit matrix factorization of a certain matrix <strong>M</strong> that relates to the <strong>Pointwise Mutual Information (PMI)</strong> matrix:
+$$
+M = W_{\text{context}} W_{\text{word}}
+$$</p>
+</li>
+<li>
+<p><strong>PMI</strong> is a measure of association between two words and is computed as:
+$$
+\text{PMI}(w_i, c_j) = \log \left( \frac{P(w_i, c_j)}{P(w_i) P(c_j)} \right)
+$$</p>
+<ul>
+<li>Where $P(w_i, c_j)$ is the joint probability of words $w_i$ and context $c_j$, and $P(w_i)$ and $P(c_j)$ are the individual probabilities of $w_i$ and $c_j$.</li>
+</ul>
+</li>
+<li>
+<p>The matrix <strong>M</strong> can also be expressed in terms of a modified co-occurrence matrix where:
+$$
+M_{ij} = \text{PMI}(w_i, c_j) \cdot \log(k)
+$$</p>
+<ul>
+<li>$k$ is the number of negative samples used in the Word2Vec training process, and it adjusts the influence of negative samples on learning.</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-implications-of-the-relationship">3. Implications of the Relationship</h3>
+<ul>
+<li>
+<p>Both SVD and Word2Vec aim to represent word meanings based on their usage in context. The primary difference is in their approaches:</p>
+<ul>
+<li><strong>SVD</strong> operates directly on a full co-occurrence matrix, which can be computationally expensive for large vocabularies.</li>
+<li><strong>Word2Vec</strong> learns embeddings through stochastic gradient descent, optimizing for prediction tasks (such as predicting context words given a target word) rather than directly modeling co-occurrences.</li>
+</ul>
+</li>
+<li>
+<p>The insight that Word2Vec performs an implicit matrix factorization helps understand why both methods can yield similar embeddings under certain conditions, despite their different operational mechanisms.</p>
+</li>
+</ul>
+<h3 id="summary">Summary</h3>
+<p>In conclusion, while SVD and Word2Vec employ different methodologies, both are fundamentally about uncovering relationships between words based on co-occurrence data. Word2Vec can be viewed as an efficient, scalable method for performing a type of matrix factorization similar to that of SVD, allowing it to produce high-quality word embeddings for various natural language processing tasks.</p>
+
+</body>
+</html>
