@@ -1,6 +1,6 @@
 ### Visualizing patches which maximally activate a neuron
-![alt text](image.png)
-![alt text](image-1.png)
+![alt text](images2/image.png)
+![alt text](images2/image-1.png)
 
 ---
 
@@ -33,11 +33,11 @@
    - **Output Layer**: The final layer that produces the output based on the processed information from the hidden layer.
 
 
-![alt text](image-2.png)
-![alt text](image-3.png)
+![alt text](images2/image-2.png)
+![alt text](images2/image-3.png)
 
-![alt text](image-4.png)
-![alt text](image-5.png)
+![alt text](images2/image-4.png)
+![alt text](images2/image-5.png)
 
 ### Summary of CNN Concepts
 
@@ -109,7 +109,7 @@
 - **Afghan Hound**: Again, the dog's face is recognized as a key factor.
 
 
-![alt text](image-6.png)
+![alt text](images2/image-6.png)
 
 ---
 
@@ -161,7 +161,7 @@
 
 
 
-![alt text](image-7.png)
+![alt text](images2/image-7.png)
 
 ---
 
@@ -188,16 +188,16 @@
 
 Guided backpropagation is a valuable technique for interpreting neural networks, allowing for a better understanding of which features influence the model's decisions.
 
-![alt text](image-9.png)
+![alt text](images2/image-9.png)
 
-![alt text](image-8.png)
+![alt text](images2/image-8.png)
 
 
 ### Optimization over images
 
-![alt text](image-10.png)
+![alt text](images2/image-10.png)
 
-![alt text](image-11.png)
+![alt text](images2/image-11.png)
 
 
 ### Image Optimization for Class Activation
@@ -292,37 +292,37 @@ Method for reconstructing images from embeddings using a neural network, particu
 This approach effectively reconstructs images from their embeddings by optimizing a loss function that quantifies the difference between the desired and generated embeddings. By iteratively updating the image based on the gradients, you can generate an image that closely resembles the original image corresponding to the embedding from the fc7 layer.
 
 
-![alt text](image-12.png)
+![alt text](images2/image-12.png)
 
-![alt text](image-13.png)
-![alt text](image-14.png)
-![alt text](image-15.png)
-![alt text](image-16.png)
+![alt text](images2/image-13.png)
+![alt text](images2/image-14.png)
+![alt text](images2/image-15.png)
+![alt text](images2/image-16.png)
 
 
 ### DeepDream
-![alt text](image-17.png)
-![alt text](image-18.png)
-![alt text](image-19.png)
-![alt text](image-20.png)
-![alt text](image-21.png)
-![alt text](image-22.png)
-![alt text](image-23.png)
+![alt text](images2/image-17.png)
+![alt text](images2/image-18.png)
+![alt text](images2/image-19.png)
+![alt text](images2/image-20.png)
+![alt text](images2/image-21.png)
+![alt text](images2/image-22.png)
+![alt text](images2/image-23.png)
 
 
 ### Deep Art
 
-![alt text](image-24.png)
-![alt text](image-25.png)
-![alt text](image-26.png)
-![alt text](image-27.png)
-![alt text](image-28.png)
+![alt text](images2/image-24.png)
+![alt text](images2/image-25.png)
+![alt text](images2/image-26.png)
+![alt text](images2/image-27.png)
+![alt text](images2/image-28.png)
 
 ---
 
 ### Fooling Deep Convolution Neural Networks
 
-![alt text](image-29.png)
-![alt text](image-30.png)
-![alt text](image-31.png)
-![alt text](image-32.png)
+![alt text](images2/image-29.png)
+![alt text](images2/image-30.png)
+![alt text](images2/image-31.png)
+![alt text](images2/image-32.png)
