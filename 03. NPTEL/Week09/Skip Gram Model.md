@@ -768,3 +768,53 @@ The relationship between **Singular Value Decomposition (SVD)** and **Word2Vec**
 ### Summary
 
 In conclusion, while SVD and Word2Vec employ different methodologies, both are fundamentally about uncovering relationships between words based on co-occurrence data. Word2Vec can be viewed as an efficient, scalable method for performing a type of matrix factorization similar to that of SVD, allowing it to produce high-quality word embeddings for various natural language processing tasks. 
+
+
+Here are some key points from the file that are important for multiple-choice questions (MCQs):
+
+### Skip-gram Model
+- **Objective**: Predict context words given a target word.
+- **Key Components**:
+  - **Input Word**: The target word for which context words are predicted.
+  - **Context Words**: Surrounding words of the input word.
+  - **Word Vectors**: High-dimensional representations of words.
+  - **Hidden Layer**: Calculated as $ h = W_{\text{word}} \cdot x $.
+
+### Loss Function
+- **Formula**: $ L(\theta) = -\sum_{i=1}^{d} \log(y_{w_i}) $.
+
+### Challenges
+- **Computational Expense**: Softmax can be expensive with large vocabularies.
+- **Solutions**:
+  - **Negative Sampling**: Randomly sample negative words to reduce computation.
+  - **Contrastive Estimation**: Contrast positive examples against negative ones.
+  - **Hierarchical Softmax**: Uses a tree structure to reduce complexity.
+
+### Word-Context Pairs
+- **Correct Pairs**: Pairs where context words appear with the target word.
+- **Incorrect Pairs**: Pairs where context words do not appear with the target word.
+
+### Probability Modeling
+- **Correct Pair Probability**: $ P(z = 1 | w, c) = \sigma(u_c^T v_w) $.
+- **Incorrect Pair Probability**: $ P(z = 0 | w, r) = \sigma(-u_r^T v_w) $.
+
+### Objective Function
+- **Maximization Goal**: Maximize the likelihood of correct pairs and minimize incorrect pairs.
+
+### Hierarchical Softmax
+- **Structure**: Uses a binary tree for efficient probability calculation.
+- **Efficiency**: Reduces computations from $ |V| $ to $ \log_2 V $.
+
+### GloVe Representations
+- **Count-Based Methods**: Use global co-occurrence counts.
+- **Predictive Methods**: Learn representations dynamically.
+- **Optimization**: Minimize the squared difference between predicted and actual log co-occurrence.
+
+### Semantic Relatedness
+- **Definition**: Measures how closely related two words are in meaning.
+- **Evaluation**: Correlation between model scores and human judgments.
+
+### Analogy Task
+- **Example**: "A is to B as C is to D" (e.g., brother:sister::grandson:granddaughter).
+
+These points summarize the essential concepts and definitions that could be useful for MCQs related to the Skip-gram model, GloVe, and related NLP topics.
