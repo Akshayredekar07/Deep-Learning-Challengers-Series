@@ -6,7 +6,7 @@
 
 ## What is NLP?
 
-We talk to these assistants not in a programming language, but in our Natural Language - the language we all communicate in.  
+We talk to these assistants not in a programming language, but in our Natural Language - the language we all communicate in.
 
 So, how do computers make sense of it?
 
@@ -32,7 +32,6 @@ An area of computer science that deals with methods to analyze, model, and under
 - **Number Plate Recognition (Image -> YOLOv5 -> OCR)**: Using YOLOv5 for object detection followed by Optical Character Recognition (OCR) to read number plates from images.
 
 ![alt text](image.png)
-
 
 ## Agenda:
 
@@ -109,7 +108,6 @@ Main NLP tasks that appear frequently across various NLP projects:
 - **Topic modeling**:  
   This is the task of uncovering the topical structure of a large collection of documents. Topic modeling is a common text-mining tool and is used in a wide range of domains, from literature to bioinformatics.
 
-
 ![alt text](image-1.png)
 
 ## Understanding Complexity in Language
@@ -144,7 +142,6 @@ NLP applications need knowledge of different levels of these building blocks, st
 ![alt text](image-2.png)
 ![alt text](image-3.png)
 
-
 ## Approaches to These Problems
 
 1. **Heuristics-Based**
@@ -153,20 +150,23 @@ NLP applications need knowledge of different levels of these building blocks, st
 
 ### Heuristics-Based NLP
 
-Similar to other early AI systems, early attempts at designing NLP systems were based on building rules for the task at hand. This required that the developers had some expertise in the domain to formulate rules that could be incorporated into a program. Such systems also required resources like dictionaries and thesauruses, typically compiled and digitized over a period of time. 
+Similar to other early AI systems, early attempts at designing NLP systems were based on building rules for the task at hand. This required that the developers had some expertise in the domain to formulate rules that could be incorporated into a program. Such systems also required resources like dictionaries and thesauruses, typically compiled and digitized over a period of time.
 
 An example of designing rules to solve an NLP problem using such resources is lexicon-based sentiment analysis. It uses counts of positive and negative words in the text to deduce the sentiment of the text.
 
 ### Machine Learning for NLP
 
-Machine learning techniques are applied to textual data just as they're used on other forms of data, such as images, speech, and structured data. Supervised machine learning techniques such as classification and regression methods are heavily used for various NLP tasks. 
+Machine learning techniques are applied to textual data just as they're used on other forms of data, such as images, speech, and structured data. Supervised machine learning techniques such as classification and regression methods are heavily used for various NLP tasks.
 
 As an example:
+
 - An NLP classification task would be to classify news articles into a set of news topics like sports or politics.
+
 - On the other hand, regression techniques, which give a numeric prediction, can be used to estimate the price of a stock based on processing the social media discussion about that stock.
 - Similarly, unsupervised clustering algorithms can be used to club together text documents.
 
 Some common machine learning algorithms for NLP:
+
 - Naive Bayes
 - SVM (Support Vector Machines)
 - Logistic Regression
@@ -175,9 +175,10 @@ Some common machine learning algorithms for NLP:
 
 ### Deep Learning for NLP
 
-We briefly touched on a couple of popular machine learning methods that are used heavily in various NLP tasks. In the last few years, we have seen a huge surge in using neural networks to deal with complex, unstructured data. Language is inherently complex and unstructured. Therefore, we need models with better representation and learning capability to understand and solve language tasks. 
+We briefly touched on a couple of popular machine learning methods that are used heavily in various NLP tasks. In the last few years, we have seen a huge surge in using neural networks to deal with complex, unstructured data. Language is inherently complex and unstructured. Therefore, we need models with better representation and learning capability to understand and solve language tasks.
 
 Here are a few popular deep neural network architectures that have become the status quo in NLP:
+
 - Recurrent Neural Network (RNN)
 - LSTM (Long Short Term Memory)
 - Convolutional Neural Network (CNN)
@@ -187,8 +188,7 @@ Here are a few popular deep neural network architectures that have become the st
 - T5 (Text-to-Text Transfer Transformer)
 - XLNet
 
-
-# Public Reaction to the New COVID-19 Strain
+## Public Reaction to the New COVID-19 Strain
 
 You are working as a Data Scientist for the Ministry of Health and Family Welfare. The government wants to learn the public sentiment on the new strain of COVID-19.
 
@@ -218,8 +218,9 @@ We can use Twitter feeds to perform sentiment analysis. Most tweets are textual,
 - **Source**: [Kaggle COVID Tweets](<kaggle_link>)
 - **Tweets**: 11,663 tweets with positive and negative labels.
 
+### Importing the Libraries
 
-```py
+```python
 import os
 import re
 import random
@@ -232,10 +233,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 
 # Setup NLTK
-!pip install --user-U nltk
+!pip install --user -U nltk
 import nltk
 nltk.download('punkt')
 ```
+
+### Plotting the distribution
 
 ```py
 def pie_chart(dataframe):
@@ -265,6 +268,4 @@ def pie_chart(dataframe):
     plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
     plt.show()  # Display the chart
-
-    
 ```
