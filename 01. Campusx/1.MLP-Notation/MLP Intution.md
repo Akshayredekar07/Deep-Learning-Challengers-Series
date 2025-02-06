@@ -29,11 +29,13 @@ Think of an orchestra:
 - The conductor (activation function) smooths and balances these sounds to create harmony.
 - Together, the orchestra (MLP) produces a complex and beautiful piece of music (the model's prediction).
 
-![MLP Notation Diagram](images/image4.png)
-![MLP Notation Diagram](images/image9.png)
-![MLP Notation Diagram](images/image10.png)
-![MLP Notation Diagram](images/image11.png)
-![MLP Notation Diagram](images/image12.png)
-![MLP Notation Diagram](images/image5.png)
-![MLP Notation Diagram](images/image6.png)
-![MLP Notation Diagram](images/image7.png)
+<div style="text-align: center;">
+   <img src="images/image4.png" alt="MLP Notation Diagram" style="width: 90%;">
+   <img src="images/image9.png" alt="MLP Notation Diagram" style="width: 90%;">
+   <img src="images/image10.png" alt="MLP Notation Diagram" style="width: 90%;">
+   <img src="images/image11.png" alt="MLP Notation Diagram" style="width: 90%;">
+   <img src="images/image12.png" alt="MLP Notation Diagram" style="width: 90%;">
+   <img src="images/image5.png" alt="MLP Notation Diagram" style="width: 90%;">
+   <img src="images/image6.png" alt="MLP Notation Diagram" style="width: 90%;">
+   <img src="images/image7.png" alt="MLP Notation Diagram" style="width: 90%;">
+</div>
