@@ -21,15 +21,13 @@ Artificial Neural Networks (ANNs) are **loosely inspired by the brain**, where m
 An **artificial neuron** models a biological neuron mathematically using **weighted sums** and an **activation function**.
 
 #### **Neuron Model:**
-$$
-O = f(W_1x_1 + W_2x_2 + W_3x_3 + \dots + W_nx_n + b)
-$$
+$$O = f(W_1x_1 + W_2x_2 + W_3x_3 + \dots + W_nx_n + b)$$
 where:
-- $ x_1, x_2, \dots, x_n $ → Input features
-- $ W_1, W_2, \dots, W_n $ → Weights (importance of each input)
-- $ b $ → Bias (adjustment term)
-- $ f(\cdot) $ → Activation function (introduces non-linearity)
-- $ O $ → Output of the neuron
+- $x_1, x_2, \dots, x_n$ → Input features
+- $W_1, W_2, \dots, W_n$ → Weights (importance of each input)
+- $b$ → Bias (adjustment term)
+- $f(\cdot)$ → Activation function (introduces non-linearity)
+- $O$ → Output of the neuron
 
 ---
 
