@@ -147,7 +147,7 @@ $$\hat{y} = f(W_o^T h + b_o)$$
 ### **What is Sparsity?**
 - **Definition:** Sparsity means most elements in a vector, matrix, or dataset are zero (e.g., $[0, 0, 3, 0, 0]$ is 80% sparse).
 - **In Neural Networks:**
-  - **Sparse Activations:** ReLU ($f(x) = \max(0, x)$) outputs zeros for negative inputs, e.g., $[-2, 1, -1, 3] \to [0, 1, 0, 3]$.
+  - **Sparse Activations:** ReLU $f(x) = \max(0, x)$ outputs zeros for negative inputs, e.g., $[-2, 1, -1, 3] \to [0, 1, 0, 3]$.
   - **Sparse Weights:** Many zeros in weight matrices (via pruning or regularization).
   - **Sparse Features:** Most feature values are zero (e.g., text data).
 - **Benefits:**
